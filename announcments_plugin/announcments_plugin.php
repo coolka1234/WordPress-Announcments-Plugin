@@ -28,7 +28,7 @@ function ap_admin_page_anon(){
 				$opAnon[$i] = wp_kses_post($_POST['ap_announcements'.$i] ?? '');
 				update_option('ap_announcements'.$i, $opAnon[$i]);
 			}
-			echo '<div class="notice notice-success is dismissible"><p>Settings saved.</p></div>'; 
+			echo '<div class="onSave"><p>Zapisano ustawienia.</p></div>'; 
 			update_option('amount', $_POST['amount']);
 		}
     } 
@@ -42,11 +42,11 @@ function ap_admin_page_anon(){
         <h1>Announcements</h1>
         <form name="ap_form" method="post">
 			<label for="amount">Amount:</label>
-			<input type="number" name="amount" id="amount" min="0" max="10" value="<?php echo $amount; ?>">    
-			<div class="announcements-wrapper">
+			<input type="number" name="amount" id="amount" min="0" max="5" value="<?php echo $amount; ?>">    
+			<div class="wrap">
 				<input type="hidden" name="ap_do_change" value="Y">
 				<?php for($i=1; $i<=$amount; $i++): ?>
-					<textarea type="text" name="<?= 'ap_announcements'.$i?>" cols="60" rows="6"><?= $opAnon[$i] ?></textarea>
+					<textarea type="text" name="<?= 'ap_announcements'.$i?>" cols="40" rows="8"><?= $opAnon[$i] ?></textarea>
 				<?php endfor ?>
 			</div>
 			<?php
@@ -62,11 +62,20 @@ function ap_admin_page_anon(){
 				}
 			}
 			?>
-			<h1>Choose announcement to change:</h1>
+			<h1>Which to change:</h1>
 			<input type="number" name="number" id="number" min="1" max="<?= $amount ?>" value="<?= ($number <= $amount) ? $number : '' ?>">
-			<?php submit_button( 'Submit' );?>
+			<?php submit_button( 'Confirm' );?>
         </form>
     </div>
+	<div class="wrap">
+		<h1>Preview</h1>
+		<?php for($i=1; $i<=$amount; $i++): ?>
+			<div class="preview"><?= $opAnon[$i] ?></div>
+		<?php endfor ?>
+	</div>
+	<div class="info"></div>
+		<p>Plugin created by Krzysztof Kulka and Tomasz Milewski</p>
+	</div>
 <?php
 }   
 	
@@ -77,6 +86,9 @@ function ap_add_announcements($content){
 	}
 	return $content;
 } 
+
+
+
 
 function ap_register_styles_css(){ 
     wp_enqueue_style( 'style', plugin_dir_url( __FILE__ ) . '/css/style.css' );
